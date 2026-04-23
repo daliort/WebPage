@@ -2,56 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Psychologist Website</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dr. Dawin A. Ortiz Guevara | Psychology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <h2>Dr. Dawin A. Ortiz Guevara </h2>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="services.html">Services</a></li>
-    </ul>
-  </nav>
+  <header class="site-header">
+    <a class="brand" href="index.html">Dr. Dawin A. Ortiz Guevara</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+      </ul>
+    </nav>
+  </header>
 
-  <!-- Hero -->
-  <section>
-    <h1>Professional Psychological Support</h1>
-    <p>Helping you improve your mental well-being.</p>
-    <button>Book Appointment</button>
-  </section>
+  <main>
+    <section class="hero">
+      <div class="hero__inner">
+        <p class="hero__eyebrow">Licensed psychological care</p>
+        <h1 class="hero__title">A calm space for clarity and growth</h1>
+        <p class="hero__lead">Thoughtful support for your mental well-being, at your pace.</p>
+        <a class="btn btn--primary" href="#contact">Book appointment</a>
+      </div>
+    </section>
 
-  <!-- About Preview -->
-  <section>
-    <h2>About</h2>
-    <p>Experienced psychologist focused on mental health and well-being.</p>
-    <a href="about.html">Learn more</a>
-  </section>
+    <section class="panel panel--about reveal" id="about-preview">
+      <h2 class="section-title">About</h2>
+      <p class="section-lead">Experienced psychologist focused on mental health, relationships, and sustainable change.</p>
+      <a class="text-link" href="about.html">Learn more</a>
+    </section>
 
-  <!-- Services -->
-  <section>
-    <h2>Services</h2>
-    <ul>
-      <li>Individual Therapy</li>
-      <li>Couples Therapy</li>
-      <li>Anxiety Support</li>
-    </ul>
-  </section>
+    <section class="panel panel--services reveal" id="services-preview">
+      <h2 class="section-title">Services</h2>
+      <ul class="service-cards">
+        <li class="service-card">Individual therapy</li>
+        <li class="service-card">Couples therapy</li>
+        <li class="service-card">Anxiety support</li>
+      </ul>
+    </section>
 
-  <!-- CTA -->
-  <section>
-    <h2>Ready to start?</h2>
-    <button>Schedule your session</button>
-  </section>
+    <section class="panel panel--cta reveal" id="contact">
+      <h2 class="section-title section-title--on-dark">Ready when you are</h2>
+      <p class="section-lead section-lead--on-dark">Take the first step toward feeling more like yourself again.</p>
+      <a class="btn btn--ghost" href="services.html">Schedule your session</a>
+    </section>
+  </main>
 
-  <!-- Footer -->
-  <footer>
-    <p>© 2026 Psychologist Website</p>
+  <footer class="site-footer">
+    <p>© 2026 Dr. Dawin A. Ortiz Guevara</p>
   </footer>
 
   <script src="js/script.js"></script>

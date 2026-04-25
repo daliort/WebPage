@@ -243,10 +243,13 @@
             </select>
           </div>
           <div>
-            <label for="notes">Mensaje (opcional)</label>
-            <textarea id="notes" name="notes" placeholder="Comparte cualquier detalle importante"></textarea>
+            <label for="mode">Modalidad</label>
+            <select id="mode" name="mode" required>
+              <option value="">Selecciona una opcion</option>
+              <option>Presencial</option>
+              <option>Virtual</option>
+            </select>
           </div>
-          <button class="btn btn--primary" type="submit">Solicitar cita</button>
         </form>
 
         <p class="success-msg" id="success-msg"></p>

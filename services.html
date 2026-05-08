@@ -250,6 +250,11 @@
               <option>Virtual</option>
             </select>
           </div>
+          <div>
+            <label for="notes">Mensaje (opcional)</label>
+            <textarea id="notes" name="notes" placeholder="Comparte cualquier detalle importante"></textarea>
+          </div>
+          <button class="btn btn--primary" type="submit" id="submit-btn">Solicitar cita</button>
         </form>
 
         <p class="success-msg" id="success-msg"></p>
@@ -269,7 +274,9 @@
       var timeSlots = document.getElementById("time-slots");
       var bookingMeta = document.getElementById("booking-meta");
       var bookingForm = document.getElementById("booking-form");
+      var submitBtn = document.getElementById("submit-btn");
       var successMsg = document.getElementById("success-msg");
+      var API_BASE = "";
       var prevMonthBtn = document.getElementById("prev-month");
       var nextMonthBtn = document.getElementById("next-month");
 
@@ -290,6 +297,13 @@
           month: "long",
           year: "numeric"
         });
+      }
+
+      function toISODateLocal(date) {
+        var y = date.getFullYear();
+        var m = String(date.getMonth() + 1).padStart(2, "0");
+        var d = String(date.getDate()).padStart(2, "0");
+        return y + "-" + m + "-" + d;
       }
 
       function isPastDate(y, m, d) {
@@ -376,6 +390,8 @@
 
       bookingForm.addEventListener("submit", function (event) {
         event.preventDefault();
+        successMsg.style.display = "none";
+
         if (!selectedDate || !selectedSlot) {
           successMsg.style.display = "block";
           successMsg.textContent = "Por favor selecciona una fecha y un horario antes de enviar.";
@@ -389,11 +405,71 @@
           return;
         }
 
-        successMsg.style.display = "block";
-        successMsg.textContent =
-          "Gracias, " + name + ". Recibimos tu solicitud para el " + formatDate(selectedDate) +
-          " a las " + selectedSlot + ". Te contactaremos por correo para confirmar.";
-        bookingForm.reset();
+        var payload = {
+          name: name,
+          email: bookingForm.elements.email.value.trim(),
+          service: bookingForm.elements.service.value,
+          mode: bookingForm.elements.mode.value,
+          appointmentDate: toISODateLocal(selectedDate),
+          timeSlot: selectedSlot,
+          notes: bookingForm.elements.notes ? bookingForm.elements.notes.value.trim() : ""
+        };
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Enviando...";
+
+        fetch(API_BASE + "/api/appointments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+          .then(function (res) {
+            return res.json().then(function (data) {
+              return { ok: res.ok, status: res.status, data: data };
+            });
+          })
+          .then(function (result) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Solicitar cita";
+            successMsg.style.display = "block";
+
+            if (!result.ok || !result.data.ok) {
+              successMsg.textContent =
+                (result.data && result.data.error) ||
+                "No pudimos enviar tu solicitud. Verifica tu conexión o intenta más tarde.";
+              return;
+            }
+
+            var msg =
+              "Gracias, " +
+              name +
+              ". Hemos registrado tu solicitud para el " +
+              formatDate(selectedDate) +
+              " a las " +
+              selectedSlot +
+              ".";
+            if (result.data.emailSent) {
+              msg += " Revisa tu correo para la confirmación automática.";
+            } else if (result.data.warning) {
+              msg += " " + result.data.warning;
+            } else {
+              msg += " Te contactaremos pronto para confirmar.";
+            }
+            successMsg.textContent = msg;
+            bookingForm.reset();
+            selectedDate = null;
+            selectedSlot = null;
+            renderCalendar();
+            renderSlots();
+            updateMeta();
+          })
+          .catch(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Solicitar cita";
+            successMsg.style.display = "block";
+            successMsg.textContent =
+              "No pudimos conectar con el servidor. Si estás abriendo este archivo directamente, inicia el servidor (npm start en la carpeta server) y visita http://localhost:3000/services.html";
+          });
       });
 
       renderCalendar();

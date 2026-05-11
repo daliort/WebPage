@@ -1,0 +1,22 @@
+# Render Blueprint: Express API in /server (serves repo root as static + POST /api/appointments).
+# Apply: Dashboard → New → Blueprint → connect this repo (or push and link).
+# https://render.com/docs/infrastructure-as-code
+
+services:
+  - type: web
+    runtime: node
+    name: webpage-appointments
+    plan: free
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Exact GitHub Pages origin, e.g. https://daliort.github.io — no trailing slash.
+      # Multiple: comma-separated (matches server parseCorsOrigin).
+      - key: CORS_ORIGIN
+        sync: false
+      # Add SMTP_* , MAIL_FROM , optional MAIL_TO in the Dashboard when you want email (RENDER.md).

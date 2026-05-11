@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f5f2">
   <meta name="color-scheme" content="light">
+  <!-- GitHub Pages: set to your Render service URL, e.g. https://webpage-appointments.onrender.com (no trailing slash). Leave empty when using local server (npm start in server/). -->
+  <meta name="appointments-api-origin" content="">
   <title>Dawin A. Ortiz Guevara | Servicios</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -276,7 +278,12 @@
       var bookingForm = document.getElementById("booking-form");
       var submitBtn = document.getElementById("submit-btn");
       var successMsg = document.getElementById("success-msg");
-      var API_BASE = "";
+      var apiMeta = document.querySelector('meta[name="appointments-api-origin"]');
+      var apiOrigin = (apiMeta && apiMeta.getAttribute("content") ? apiMeta.getAttribute("content") : "").trim().replace(/\/$/, "");
+      var host = window.location.hostname;
+      var isLocalHost =
+        host === "localhost" || host === "127.0.0.1" || host === "[::1]" || /^127\.\d+\.\d+\.\d+$/.test(host);
+      var API_BASE = isLocalHost ? "" : apiOrigin;
       var prevMonthBtn = document.getElementById("prev-month");
       var nextMonthBtn = document.getElementById("next-month");
 
@@ -412,6 +419,13 @@
         if (!name) {
           successMsg.style.display = "block";
           successMsg.textContent = "Por favor ingresa tu nombre completo.";
+          return;
+        }
+
+        if (!isLocalHost && !API_BASE) {
+          successMsg.style.display = "block";
+          successMsg.textContent =
+            "Falta la URL del servidor de citas: en la etiqueta meta «appointments-api-origin» de esta página, pon la URL de tu servicio en Render (sin barra final). Ver RENDER.md.";
           return;
         }
 

@@ -86,6 +86,18 @@ function formatAppointmentDateForEmail(isoDate) {
   });
 }
 
+function formatTimeSlot12h(hhmm) {
+  var str = String(hhmm).trim();
+  var parts = str.split(":");
+  var h = parseInt(parts[0], 10);
+  var m = parts[1] || "00";
+  if (isNaN(h)) return str;
+  var period = h >= 12 ? "PM" : "AM";
+  var hour12 = h % 12;
+  if (hour12 === 0) hour12 = 12;
+  return hour12 + ":" + m + " " + period;
+}
+
 app.post("/api/appointments", async function (req, res) {
   var body = req.body || {};
   var name = body.name && String(body.name).trim();
@@ -131,6 +143,7 @@ app.post("/api/appointments", async function (req, res) {
 
   if (transport && from) {
     var dateLabel = formatAppointmentDateForEmail(appointmentDate);
+    var timeLabel = formatTimeSlot12h(timeSlot);
     var textBody =
       "Hola " +
       record.name +
@@ -140,7 +153,7 @@ app.post("/api/appointments", async function (req, res) {
       dateLabel +
       "\n" +
       "Hora: " +
-      timeSlot +
+      timeLabel +
       "\n" +
       "Servicio: " +
       service +
@@ -163,7 +176,7 @@ app.post("/api/appointments", async function (req, res) {
       escapeHtml(dateLabel) +
       "</li>" +
       "<li>Hora: " +
-      escapeHtml(timeSlot) +
+      escapeHtml(timeLabel) +
       "</li>" +
       "<li>Servicio: " +
       escapeHtml(service) +

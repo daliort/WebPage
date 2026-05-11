@@ -280,7 +280,17 @@
       var prevMonthBtn = document.getElementById("prev-month");
       var nextMonthBtn = document.getElementById("next-month");
 
-      var slotOptions = ["09:00", "10:30", "12:00", "14:00", "16:00", "18:00"];
+      var slotOptions = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"];
+      function formatSlot12h(hhmm) {
+        var parts = String(hhmm).split(":");
+        var h = parseInt(parts[0], 10);
+        var m = parts[1] || "00";
+        if (isNaN(h)) return hhmm;
+        var period = h >= 12 ? "PM" : "AM";
+        var hour12 = h % 12;
+        if (hour12 === 0) hour12 = 12;
+        return hour12 + ":" + m + " " + period;
+      }
       var monthNames = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -318,7 +328,7 @@
           var btn = document.createElement("button");
           btn.type = "button";
           btn.className = "slot-btn" + (slot === selectedSlot ? " selected" : "");
-          btn.textContent = slot;
+          btn.textContent = formatSlot12h(slot);
           btn.addEventListener("click", function () {
             selectedSlot = slot;
             renderSlots();
@@ -374,7 +384,7 @@
 
       function updateMeta() {
         var dateText = selectedDate ? formatDate(selectedDate) : "sin seleccionar";
-        var slotText = selectedSlot || "sin seleccionar";
+        var slotText = selectedSlot ? formatSlot12h(selectedSlot) : "sin seleccionar";
         bookingMeta.textContent = "Fecha: " + dateText + " | Hora: " + slotText;
       }
 
@@ -446,7 +456,7 @@
               ". Hemos registrado tu solicitud para el " +
               formatDate(selectedDate) +
               " a las " +
-              selectedSlot +
+              formatSlot12h(selectedSlot) +
               ".";
             if (result.data.emailSent) {
               msg += " Revisa tu correo para la confirmación automática.";

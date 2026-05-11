@@ -1,2 +1,7 @@
 .DS_Store
 .vscode/
+
+# Backend
+server/node_modules/
+server/.env
+server/data/appointments.json
